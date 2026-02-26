@@ -146,13 +146,17 @@ CREATE OR REPLACE AGENT TEMP.<SLUG>.<SLUG>_AGENT
 
 ---
 
-## Step 8: Add to Snowflake Intelligence (AUTO-EXECUTE)
+## Step 8: Add to Snowflake Intelligence (CRITICAL - DO NOT SKIP)
+
+**⚠️ THIS STEP IS MANDATORY - THE DEMO IS INCOMPLETE WITHOUT IT**
 
 **EXECUTE IMMEDIATELY - NO PROMPT:**
 ```sql
 ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
   ADD AGENT TEMP.<SLUG>.<SLUG>_AGENT;
 ```
+
+**VERIFY:** If this step fails, retry. If agent already exists, that's OK - continue to Step 9.
 
 ---
 
