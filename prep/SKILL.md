@@ -207,7 +207,7 @@ ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
 
 ---
 
-## Step 9: Report & Open Browser
+## Step 9: Report Summary
 
 Print summary:
 ```
@@ -222,11 +222,6 @@ Rows: Y total
 Golden Queries:
 1. "..."
 2. "..."
-```
-
-**Then AUTOMATICALLY open browser:**
-```
-open_browser(url="https://<account>.snowflakecomputing.com")
 ```
 
 ---
