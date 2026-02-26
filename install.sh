@@ -20,6 +20,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+# Use key-pair auth connection (no browser prompts during demo)
+export SNOWFLAKE_DEFAULT_CONNECTION_NAME=si_demo
+
 exec ~/.local/bin/cortex \
     --bypass \
     --dangerously-allow-all-tool-calls \
