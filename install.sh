@@ -20,7 +20,11 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-exec ~/.local/bin/cortex --dangerously-allow-all-tool-calls -p "/si-demo prep $1"
+exec ~/.local/bin/cortex \
+    --bypass \
+    --dangerously-allow-all-tool-calls \
+    --auto-accept-plans \
+    -p "/si-demo prep $1"
 EOF
 chmod +x ~/.local/bin/si-demo
 
