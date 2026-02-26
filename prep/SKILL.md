@@ -81,13 +81,50 @@ CREATE OR REPLACE TABLE TEMP.<SLUG>.<TABLE_NAME> (...);
 Generate realistic data:
 - 10,000 - 75,000 rows per fact table
 - 1,000 - 5,000 rows per dimension table
-- Use GENERATOR function
+
+### ⚠️ CRITICAL: Use TRUE RANDOMIZATION
+
+**DO NOT** use simple `MOD(SEQ4(), N)` patterns - this creates uniform/identical distributions!
+
+**ALWAYS** use these Snowflake functions for realistic variance:
 
 ```sql
-INSERT INTO TEMP.<SLUG>.<TABLE>
-SELECT ...
+-- Random numbers with variance
+UNIFORM(100, 5000, RANDOM())                    -- Random integer in range
+UNIFORM(0.5, 2.5, RANDOM())                     -- Random decimal multiplier
+
+-- Random selection from arrays (for states, cities, categories)
+ARRAY_CONSTRUCT('CA','TX','NY','FL','WA','IL','PA','OH','GA','NC')[UNIFORM(0,9,RANDOM())::INT]
+
+-- Random dates with spread
+DATEADD(DAY, -UNIFORM(1, 730, RANDOM()), CURRENT_DATE())
+
+-- Random amounts with realistic variance
+ROUND(UNIFORM(100, 10000, RANDOM()) * UNIFORM(0.8, 1.5, RANDOM()), 2)
+
+-- Weighted distributions (e.g., more orders from certain states)
+CASE 
+  WHEN RANDOM() < 0.3 THEN 'CA'   -- 30% California
+  WHEN RANDOM() < 0.5 THEN 'TX'   -- 20% Texas  
+  WHEN RANDOM() < 0.65 THEN 'NY'  -- 15% New York
+  ELSE ARRAY_CONSTRUCT('FL','WA','IL','PA','OH')[UNIFORM(0,4,RANDOM())::INT]
+END
+```
+
+### Example Pattern:
+```sql
+INSERT INTO TEMP.<SLUG>.ORDERS
+SELECT 
+    SEQ4() AS ORDER_ID,
+    UNIFORM(1, 5000, RANDOM()) AS CUSTOMER_ID,
+    DATEADD(DAY, -UNIFORM(1, 365, RANDOM()), CURRENT_DATE()) AS ORDER_DATE,
+    ROUND(UNIFORM(50, 2000, RANDOM()) * UNIFORM(0.7, 1.4, RANDOM()), 2) AS AMOUNT,
+    CASE WHEN RANDOM() < 0.35 THEN 'CA' WHEN RANDOM() < 0.55 THEN 'TX' 
+         WHEN RANDOM() < 0.70 THEN 'NY' ELSE ARRAY_CONSTRUCT('FL','WA','IL')[UNIFORM(0,2,RANDOM())::INT] END AS STATE
 FROM TABLE(GENERATOR(ROWCOUNT => 50000));
 ```
+
+**Goal:** When user asks "revenue by state" - each state should have DIFFERENT totals!
 
 ---
 
