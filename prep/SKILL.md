@@ -93,12 +93,9 @@ FROM TABLE(GENERATOR(ROWCOUNT => 50000));
 
 ## Step 5: Create Semantic View (AUTO-EXECUTE)
 
-1. Generate YAML with:
-   - Tables with columns defined
-   - `dimensions` (TEXT, BOOLEAN)
-   - `facts` (NUMBER)
-   - `time_dimensions` (DATE, TIMESTAMP)
-   - 5 `verified_queries`
+**⚠️ DO NOT create a stage or upload a YAML file. Use the inline method ONLY.**
+
+1. Generate YAML content inline (do NOT write to file or stage)
 
 2. Validate with `reflect_semantic_model`
 
@@ -106,10 +103,23 @@ FROM TABLE(GENERATOR(ROWCOUNT => 50000));
 ```sql
 CALL SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML(
   'TEMP.<COMPANY_SLUG>',
-  $$<yaml_content>$$,
+  $$
+name: <COMPANY>_ANALYTICS
+tables:
+  - name: ...
+    ...
+$$,
   FALSE
 );
 ```
+
+**⛔ NEVER DO THIS:**
+- `CREATE STAGE` - NO
+- `PUT file` - NO  
+- `@stage/file.yaml` - NO
+
+**✅ ALWAYS DO THIS:**
+- Pass YAML directly as string in `$$...$$` to `SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML`
 
 ---
 
