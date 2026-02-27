@@ -23,10 +23,32 @@ curl -sSL https://raw.githubusercontent.com/sfc-gh-tracker/si-demo/main/install.
 ## Usage
 
 ```bash
+# Auto-detect use case from website
 si-demo https://company.com
+
+# Specify a use case
+si-demo https://company.com "Customer 360"
+si-demo https://company.com "Supply Chain"
+si-demo https://company.com "Marketing Analytics"
 ```
 
 **That's it.** Wait ~2 minutes, then open Snowflake Intelligence.
+
+---
+
+## Supported Use Cases
+
+| Use Case | Best For |
+|----------|----------|
+| **Customer 360** | Unified customer view, segmentation, LTV |
+| **Marketing Analytics** | Attribution, campaigns, ROAS |
+| **Product Analytics** | Web/app events, funnels, DAU |
+| **Financial Reporting** | P&L, budget vs actual, margin |
+| **Supply Chain** | Inventory, forecasting, delivery |
+| **Risk & Fraud** | AML, fraud detection, alerts |
+| **Contact Center** | Agent performance, CSAT, handle time |
+| **IoT & Telemetry** | Sensors, devices, uptime |
+| **Embedded Analytics** | Multi-tenant dashboards, API usage |
 
 ---
 
@@ -44,24 +66,17 @@ si-demo https://company.com
 ## Example
 
 ```bash
-si-demo https://acme.com
+si-demo https://acme.com "Customer 360"
 ```
 
 Creates:
-- `TEMP.ACME` schema
+- `TEMP.ACME` schema with Customer 360 tables
 - `TEMP.ACME.ACME_ANALYTICS` semantic view
 - `TEMP.ACME.ACME_AGENT` in Snowflake Intelligence
 
----
-
-## Demo Queries
-
-Once ready, try these in Snowflake Intelligence:
-
-1. "What is our total revenue?"
-2. "Who are our top 10 customers?"
-3. "Show me the monthly trend"
-4. "Which region has the most sales?"
+Golden queries will be tailored to Customer 360:
+- "Who are our top customers by LTV?"
+- "What is retention by segment?"
 
 ---
 

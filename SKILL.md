@@ -38,36 +38,48 @@ Generate personalized demos from any prospect's website - zero clicks to Snowfla
 ## Quick Start
 
 ```
+# Auto-detect use case from website
 si-demo https://prospect-company.com
+
+# Specify a use case explicitly
+si-demo https://prospect-company.com "Customer 360"
+si-demo https://prospect-company.com "Supply Chain"
 ```
 
 Then: **Snowflake Intelligence** → Select **`<COMPANY>_AGENT`** → Demo!
 
+## Supported Use Cases
+
+| Use Case | Description | Best For |
+|----------|-------------|----------|
+| **Customer 360** | Unified customer view, segmentation, LTV | Retail, SaaS, Financial |
+| **Marketing Analytics** | Attribution, campaign performance, CDP | Marketing teams |
+| **Product Analytics** | Web/app events, funnels, engagement | Digital products |
+| **Financial Reporting** | P&L, planning, profitability | Finance teams |
+| **Supply Chain** | Inventory, demand forecasting, visibility | Manufacturing, Retail |
+| **Risk & Fraud** | AML, fraud detection, risk scoring | Financial, Insurance |
+| **Contact Center** | Agent performance, CSAT, call analytics | Service orgs |
+| **IoT & Telemetry** | Sensor data, operational metrics | Industrial, Automotive |
+| **ML & Data Science** | Churn prediction, propensity, forecasting | Analytics teams |
+| **Embedded Analytics** | Customer-facing dashboards, data apps | SaaS, Platforms |
+| **Data Sharing** | Clean rooms, partner data exchange | Multi-party analytics |
+
 ## How It Works
 
 ```
-si-demo https://acme-corp.com
+si-demo https://acme-corp.com "Customer 360"
 
   1. Scrapes site → detects industry
-  2. Creates TEMP.<COMPANY> schema
-  3. Generates mock data (50K-200K rows)
-  4. Creates Semantic View
-  5. Creates Cortex Agent
-  6. Adds to Snowflake Intelligence
-  7. Opens browser automatically
+  2. Selects use case (specified or auto-detected)
+  3. Creates TEMP.<COMPANY> schema
+  4. Generates use-case-specific tables & data
+  5. Creates Semantic View with tailored metrics
+  6. Creates Cortex Agent
+  7. Adds to Snowflake Intelligence
+  8. Provides use-case-specific golden queries
 
   → Ready to demo!
 ```
-
-## Industry Templates
-
-| Industry | Tables | Best For |
-|----------|--------|----------|
-| **saas** | subscriptions, customers, usage, invoices | Software, B2B |
-| **retail** | orders, customers, products, inventory | E-commerce |
-| **healthcare** | patients, visits, staff, referrals | Health tech |
-| **financial** | members, loans, accounts, transactions, credit_cards | Fintech, Credit Unions |
-| **manufacturing** | orders, inventory, suppliers, shipments | Industrial |
 
 ## Demo Assets
 
@@ -76,11 +88,3 @@ si-demo https://acme-corp.com
 | Schema | `TEMP.<COMPANY_SLUG>` |
 | Semantic View | `TEMP.<COMPANY_SLUG>.<NAME>_ANALYTICS` |
 | Agent | `TEMP.<COMPANY_SLUG>.<COMPANY_SLUG>_AGENT` |
-
-## Live Demo Tips
-
-**Golden queries (always work):**
-1. "What's our revenue trend?"
-2. "Who are our top customers?"
-3. "Which products/regions are growing?"
-4. "Show me month-over-month growth"
