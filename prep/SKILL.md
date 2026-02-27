@@ -172,28 +172,85 @@ Generate realistic data:
 - 10,000 - 75,000 rows per fact table
 - 1,000 - 5,000 rows per dimension table
 
-### ⚠️ CRITICAL: Use TRUE RANDOMIZATION
+### ⚠️ CRITICAL: DIMENSION-AWARE RANDOMIZATION
 
-**DO NOT** use simple `MOD(SEQ4(), N)` patterns - this creates uniform/identical distributions!
+**THE PROBLEM:** Using `UNIFORM(100, 5000, RANDOM())` alone creates identical averages across all dimensions!
 
-**ALWAYS** use these Snowflake functions for realistic variance:
+**THE SOLUTION:** Numeric values MUST vary based on dimension values using CASE statements.
+
+### Pattern 1: CASE-based multipliers (REQUIRED for all measures)
 
 ```sql
-UNIFORM(100, 5000, RANDOM())                    -- Random integer in range
-UNIFORM(0.5, 2.5, RANDOM())                     -- Random decimal multiplier
-ARRAY_CONSTRUCT('CA','TX','NY','FL')[UNIFORM(0,3,RANDOM())::INT]  -- Random from array
-DATEADD(DAY, -UNIFORM(1, 730, RANDOM()), CURRENT_DATE())  -- Random dates
-ROUND(UNIFORM(100, 10000, RANDOM()) * UNIFORM(0.8, 1.5, RANDOM()), 2)  -- Varied amounts
+-- WRONG: Same average across all channels
+UNIFORM(100, 1000, RANDOM()) AS AMOUNT
 
--- Weighted distributions
-CASE 
-  WHEN RANDOM() < 0.3 THEN 'High'
-  WHEN RANDOM() < 0.7 THEN 'Medium'
-  ELSE 'Low'
-END
+-- RIGHT: Different ranges per dimension value
+CASE CHANNEL
+    WHEN 'Branch' THEN UNIFORM(500, 15000, RANDOM())
+    WHEN 'Online Banking' THEN UNIFORM(200, 5000, RANDOM())
+    WHEN 'Credit Card' THEN UNIFORM(50, 800, RANDOM())
+    WHEN 'Mobile App' THEN UNIFORM(10, 300, RANDOM())
+    WHEN 'Debit Card' THEN UNIFORM(5, 150, RANDOM())
+END * UNIFORM(0.7, 1.4, RANDOM()) AS AMOUNT
 ```
 
-**Goal:** Aggregations by dimension should show DIFFERENT values!
+### Pattern 2: Category multipliers for compound variance
+
+```sql
+-- Apply category-specific multipliers AFTER base amount
+AMOUNT * CASE CATEGORY
+    WHEN 'Enterprise' THEN UNIFORM(3.0, 5.0, RANDOM())
+    WHEN 'Mid-Market' THEN UNIFORM(1.5, 2.5, RANDOM())
+    WHEN 'SMB' THEN UNIFORM(0.5, 1.2, RANDOM())
+END AS ADJUSTED_AMOUNT
+```
+
+### Pattern 3: Correlated dimensions (risk scores, ratings)
+
+```sql
+-- High-risk rules should have higher scores
+CASE RULE_TYPE
+    WHEN 'Pattern Anomaly' THEN UNIFORM(75, 98, RANDOM())
+    WHEN 'International' THEN UNIFORM(60, 90, RANDOM())
+    WHEN 'Velocity' THEN UNIFORM(50, 80, RANDOM())
+    WHEN 'Large Transaction' THEN UNIFORM(35, 65, RANDOM())
+    ELSE UNIFORM(25, 50, RANDOM())
+END AS RISK_SCORE
+```
+
+### Pattern 4: Two-step INSERT + UPDATE (when needed)
+
+If CASE references a column set in the same SELECT, use UPDATE:
+
+```sql
+-- Step 1: Insert with CHANNEL but NULL amount
+INSERT INTO TABLE SELECT ..., CHANNEL, NULL AS AMOUNT ...
+
+-- Step 2: Update amount based on CHANNEL
+UPDATE TABLE SET AMOUNT = CASE CHANNEL
+    WHEN 'Branch' THEN UNIFORM(500, 15000, RANDOM())
+    ...
+END;
+```
+
+### Validation Check
+
+After generating data, run:
+```sql
+SELECT DIMENSION_COL, ROUND(AVG(MEASURE), 2) AS AVG_VAL 
+FROM TABLE GROUP BY DIMENSION_COL;
+```
+
+**If all averages are within 10% of each other, the data is TOO UNIFORM - regenerate!**
+
+Expected variance example:
+| Channel | Avg Amount |
+|---------|------------|
+| Branch | $12,720 |
+| Online | $3,890 |
+| Credit Card | $720 |
+| Mobile | $223 |
+| Debit | $105 |
 
 ---
 
