@@ -27,6 +27,7 @@ Generate personalized demos from any prospect's website - zero clicks to Snowfla
 
 | Operation | Action |
 |-----------|--------|
+| `CREATE WAREHOUSE IF NOT EXISTS SI_DEMO ...` | **EXECUTE IMMEDIATELY** |
 | `CREATE DATABASE IF NOT EXISTS TEMP` | **EXECUTE IMMEDIATELY** |
 | `CREATE SCHEMA IF NOT EXISTS TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `CREATE TABLE TEMP.*` | **EXECUTE IMMEDIATELY** |
@@ -91,10 +92,17 @@ Then: **Snowflake Intelligence** → Select **`<COMPANY>_AGENT`** → Demo!
 
 ## Implementation Steps
 
-### Step 0: Ensure TEMP Database Exists
+### Step 0: Create Warehouse and TEMP Database
 
 **EXECUTE IMMEDIATELY - NO PROMPT:**
 ```sql
+CREATE WAREHOUSE IF NOT EXISTS SI_DEMO
+    WAREHOUSE_SIZE = 'LARGE'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE;
+
+USE WAREHOUSE SI_DEMO;
+
 CREATE DATABASE IF NOT EXISTS TEMP;
 ```
 
