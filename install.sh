@@ -15,8 +15,8 @@ cat > ~/.local/bin/si-demo << 'EOF'
 # Usage: si-demo https://company.com
 
 if [ -z "$1" ]; then
-    echo "Usage: si-demo <company-url>"
-    echo "Example: si-demo https://acme.com"
+    echo "Usage: /si-demo <company-url>"
+    echo "Example: /si-demo https://acme.com"
     exit 1
 fi
 
@@ -32,7 +32,7 @@ echo ""
 echo "✅ SI Demo installed!"
 echo ""
 echo "Usage:"
-echo "  si-demo https://company.com"
+echo "  /si-demo https://company.com"
 echo ""
 echo "Example:"
-echo "  si-demo https://acme.com"
+echo "  /si-demo https://acme.com"
