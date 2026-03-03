@@ -24,12 +24,12 @@ curl -sSL https://raw.githubusercontent.com/sfc-gh-tracker/si-demo/main/install.
 
 ```bash
 # Auto-detect use case from website
-si-demo https://company.com
+/si-demo https://company.com
 
 # Specify a use case
-si-demo https://company.com "Customer 360"
-si-demo https://company.com "Supply Chain"
-si-demo https://company.com "Marketing Analytics"
+/si-demo https://company.com "Customer 360"
+/si-demo https://company.com "Supply Chain"
+/si-demo https://company.com "Marketing Analytics"
 ```
 
 **That's it.** Wait ~2 minutes, then open Snowflake Intelligence.
