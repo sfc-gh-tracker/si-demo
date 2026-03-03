@@ -336,8 +336,6 @@ relationships:
   - name: REL_NAME
     left_table: LEFT_TABLE
     right_table: RIGHT_TABLE
-    relationship_type: many_to_one
-    join_type: left
     relationship_columns:
       - left_column: FK_COLUMN
         right_column: PK_COLUMN
@@ -361,6 +359,41 @@ $$
 - `DATE`
 - `TIMESTAMP`
 - `BOOLEAN`
+
+### ⚠️ CRITICAL: Semantic View Relationships
+
+**DO NOT include `join_type` or `relationship_type` in relationships!**
+
+Semantic views auto-infer relationship types from the data. Including these fields causes errors:
+```
+Error: invalid value for enum field joinType: "left"
+```
+
+**WRONG:**
+```yaml
+relationships:
+  - name: orders_to_customers
+    left_table: orders
+    right_table: customers
+    relationship_type: many_to_one  # ❌ CAUSES ERROR
+    join_type: left                  # ❌ CAUSES ERROR
+    relationship_columns:
+      - left_column: customer_id
+        right_column: customer_id
+```
+
+**CORRECT:**
+```yaml
+relationships:
+  - name: orders_to_customers
+    left_table: orders
+    right_table: customers
+    relationship_columns:
+      - left_column: customer_id
+        right_column: customer_id
+```
+
+Also add `unique: true` to primary key dimensions for proper relationship inference.
 
 ---
 
@@ -472,3 +505,5 @@ Print summary with **USE CASE SPECIFIC** golden queries:
 3. **Use case drives everything** - tables, data, and golden queries
 4. **Inline YAML only** - never create stages for semantic views
 5. **Always add to SI** - use `ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT`
+6. **No join_type in relationships** - semantic views auto-infer (legacy models required it, semantic views don't)
+7. **Test before finishing** - use `call_cortex_analyst` to verify semantic view works with a sample query
