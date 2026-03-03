@@ -12,7 +12,7 @@ mkdir -p ~/.local/bin
 cat > ~/.local/bin/si-demo << 'EOF'
 #!/bin/bash
 # SI Demo - One command to generate Snowflake Intelligence demos
-# Usage: si-demo https://company.com
+# Usage: /si-demo https://company.com
 
 if [ -z "$1" ]; then
     echo "Usage: /si-demo <company-url>"
