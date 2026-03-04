@@ -8,7 +8,8 @@
 
 1. **Cortex CLI** installed (`~/.local/bin/cortex`)
 2. **Snowflake account** with ACCOUNTADMIN access
-3. **DEMO_WH** warehouse available
+
+> **Note:** The `SI_DEMO` warehouse is automatically created during execution.
 
 ---
 
