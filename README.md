@@ -7,7 +7,7 @@
 ## Prerequisites
 
 1. **Cortex CLI** installed (`~/.local/bin/cortex`)
-2. **Snowflake account** with ACCOUNTADMIN access
+2. **Snowflake account** with the **AE** role (see [AE Role Setup](#ae-role-setup-account-owners) below)
 
 > **Note:** The `SI_DEMO` warehouse is automatically created during execution.
 
