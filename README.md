@@ -9,8 +9,6 @@
 1. **Cortex CLI** installed (`~/.local/bin/cortex`)
 2. **Snowflake account** with the **AE** role (see [AE Role Setup](#ae-role-setup-account-owners) below)
 
-> **Note:** The `SI_DEMO` warehouse is automatically created during execution.
-
 ---
 
 ## Install (one-time)
@@ -85,7 +83,7 @@ Golden queries will be tailored to Customer 360:
 
 | Issue | Fix |
 |-------|-----|
-| Agent not in SI | Run: `ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT TEMP.<COMPANY>.<COMPANY>_AGENT` |
+| Agent not in SI | An account admin needs to run: `ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT TEMP.<COMPANY>.<COMPANY>_AGENT` |
 | Auth prompt | Log in once, session stays alive |
 | Command not found | Re-run the install command |
 

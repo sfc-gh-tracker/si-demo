@@ -27,14 +27,11 @@ Generate personalized demos from any prospect's website - zero clicks to Snowfla
 
 | Operation | Action |
 |-----------|--------|
-| `CREATE WAREHOUSE IF NOT EXISTS SI_DEMO ...` | **EXECUTE IMMEDIATELY** |
-| `CREATE DATABASE IF NOT EXISTS TEMP` | **EXECUTE IMMEDIATELY** |
 | `CREATE SCHEMA IF NOT EXISTS TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `CREATE TABLE TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `INSERT INTO TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `CALL SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML(...)` | **EXECUTE IMMEDIATELY** |
 | `CREATE AGENT TEMP.*` | **EXECUTE IMMEDIATELY** |
-| `ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT ...` | **EXECUTE IMMEDIATELY** |
 
 ### ❌ NEVER DO:
 
@@ -91,22 +88,6 @@ Then: **Snowflake Intelligence** → Select **`<COMPANY>_AGENT`** → Demo!
 ---
 
 ## Implementation Steps
-
-### Step 0: Create Warehouse and TEMP Database
-
-**EXECUTE IMMEDIATELY - NO PROMPT:**
-```sql
-CREATE WAREHOUSE IF NOT EXISTS SI_DEMO
-    WAREHOUSE_SIZE = 'LARGE'
-    AUTO_SUSPEND = 60
-    AUTO_RESUME = TRUE;
-
-USE WAREHOUSE SI_DEMO;
-
-CREATE DATABASE IF NOT EXISTS TEMP;
-```
-
----
 
 ### Step 1: Extract Company Intelligence & Determine Use Case
 
@@ -425,19 +406,7 @@ CREATE OR REPLACE AGENT TEMP.<COMPANY_SLUG>.<COMPANY_SLUG>_AGENT
 
 ---
 
-### Step 7: Add to Snowflake Intelligence (CRITICAL - DO NOT SKIP)
-
-**⚠️ THIS STEP IS MANDATORY - THE DEMO IS INCOMPLETE WITHOUT IT**
-
-**EXECUTE IMMEDIATELY - NO PROMPT:**
-```sql
-ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
-  ADD AGENT TEMP.<COMPANY_SLUG>.<COMPANY_SLUG>_AGENT;
-```
-
----
-
-### Step 8: Report Summary with Use-Case-Specific Golden Queries
+### Step 7: Report Summary with Use-Case-Specific Golden Queries
 
 Print summary with **USE CASE SPECIFIC** golden queries:
 
@@ -512,6 +481,5 @@ Print summary with **USE CASE SPECIFIC** golden queries:
 2. **NO PROMPTS** - execute everything automatically
 3. **Use case drives everything** - tables, data, and golden queries
 4. **Inline YAML only** - never create stages for semantic views
-5. **Always add to SI** - use `ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT`
-6. **No join_type in relationships** - semantic views auto-infer (legacy models required it, semantic views don't)
+5. **No join_type in relationships** - semantic views auto-infer (legacy models required it, semantic views don't)
 7. **Test before finishing** - use `call_cortex_analyst` to verify semantic view works with a sample query
