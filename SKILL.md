@@ -27,7 +27,7 @@ Generate personalized demos from any prospect's website - zero clicks to Snowfla
 
 | Operation | Action |
 |-----------|--------|
-| `CREATE SCHEMA IF NOT EXISTS TEMP.*` | **EXECUTE IMMEDIATELY** |
+| `CREATE OR REPLACE SCHEMA TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `CREATE TABLE TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `INSERT INTO TEMP.*` | **EXECUTE IMMEDIATELY** |
 | `CALL SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML(...)` | **EXECUTE IMMEDIATELY** |
@@ -157,7 +157,7 @@ Fetch **at least 2-3 additional pages** beyond the homepage (e.g. `/products`, `
 
 **EXECUTE IMMEDIATELY - NO PROMPT:**
 ```sql
-CREATE SCHEMA IF NOT EXISTS TEMP.<COMPANY_SLUG>;
+CREATE OR REPLACE SCHEMA TEMP.<COMPANY_SLUG>;
 ```
 
 ---
