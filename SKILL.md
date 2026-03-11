@@ -97,6 +97,42 @@ Fetch the URL and extract:
 - Main products/services
 - Business model (B2B, B2C, marketplace)
 
+**Then crawl deeper.** Follow links to product pages, "About Us", investor relations, or any page that reveals:
+- Specific product names, brands, and SKUs
+- Product categories and lines
+- Geographic markets served
+- Customer segments (e.g. hospitals, clinics, enterprises)
+- Real pricing tiers if available
+
+Fetch **at least 2-3 additional pages** beyond the homepage (e.g. `/products`, `/solutions`, `/about`, `/investors`) to build a rich picture. The more real detail you capture, the better the demo.
+
+#### ⚠️ CRITICAL: USE REAL COMPANY DATA IN MOCK DATA
+
+**ALL dimension values (product names, categories, regions, customer segments, etc.) MUST come from what you scraped from the company's website.** Do NOT use generic placeholders.
+
+| Data Element | What To Do |
+|-------------|------------|
+| Product names | Use actual product/brand names from the website |
+| Product lines/categories | Use the company's real product categories |
+| Customer types | Use real customer segments the company serves (e.g. "Hospitals", "Ambulatory Surgery Centers") |
+| Regions | Use regions where the company actually operates |
+| Supplier component types | Map to the company's actual product components |
+| Warehouse locations | Use the company's real facility locations if available |
+| Channel names | Use the company's actual sales/distribution channels |
+| Department names | Use realistic departments for that industry |
+
+**Example - Medical Device Company (Merit Medical):**
+- Products: "SplashWire Hydrophilic Guide Wire", "Temno Biopsy Needle", "HeRO Graft" (NOT "Product A", "Product B")
+- Product Lines: "Cardiovascular", "Endoscopy", "Interventional Oncology" (NOT "Line 1", "Line 2")
+- Locations: "South Jordan, UT", "Galway, Ireland", "Tijuana, Mexico" (NOT "Warehouse 1", "Warehouse 2")
+
+**Example - SaaS Company (Datadog):**
+- Products: "Infrastructure Monitoring", "APM", "Log Management", "Cloud SIEM" (NOT "Product A")
+- Customer Segments: "Enterprise", "Mid-Market", "Startup" with real industry verticals
+- Regions: Map to where the company has offices
+
+**If the website doesn't provide enough detail for a dimension, make reasonable inferences based on the company's industry — but always prefer real data over generic labels.**
+
 #### Use Case Selection
 
 **If USE_CASE is specified:** Use it directly.
@@ -208,6 +244,12 @@ API_CALLS (call_id, tenant_id, endpoint, call_date, response_time_ms, status_cod
 Generate realistic data:
 - 10,000 - 75,000 rows per fact table
 - 1,000 - 5,000 rows per dimension table
+
+#### ⚠️ MANDATORY: USE SCRAPED DATA FROM STEP 1
+
+All CASE statements for dimension values **MUST** use the real product names, categories, locations, and other details extracted from the company's website in Step 1. Do NOT fall back to generic values. If you have 12 real product names, use all 12. If you found 5 real warehouse locations, use those exact locations.
+
+Review your Step 1 extraction before writing any INSERT statements to ensure every dimension value traces back to something real about the company.
 
 #### ⚠️ CRITICAL: DIMENSION-AWARE RANDOMIZATION
 
@@ -482,4 +524,5 @@ Print summary with **USE CASE SPECIFIC** golden queries:
 3. **Use case drives everything** - tables, data, and golden queries
 4. **Inline YAML only** - never create stages for semantic views
 5. **No join_type in relationships** - semantic views auto-infer (legacy models required it, semantic views don't)
+6. **Real company data ONLY** - product names, categories, locations, and dimensions MUST come from the scraped website. Crawl multiple pages. Never use generic placeholders
 7. **Test before finishing** - use `call_cortex_analyst` to verify semantic view works with a sample query
